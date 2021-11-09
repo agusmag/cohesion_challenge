@@ -4,9 +4,9 @@
 
 1. In the project base folder 
        
-       maven clean
-       maven resources
-       maven compile
+       mvn clean
+       mvn resources:resources
+       mvn compile
        mvn test
        
 2. That's it ;)
