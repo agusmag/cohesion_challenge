@@ -7,8 +7,10 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
+import static org.testng.Assert.assertFalse;
 
 public class ChicagoWeatherTest {
     private final String apiUri = "https://data.cityofchicago.org/resource/k7hf-8y75.json";
@@ -54,8 +56,41 @@ public class ChicagoWeatherTest {
     @Test(priority = 20)
     public void verifyPageNavigationInDataSets() {
         // ARRANGE
+        queryParams.put("station_name", "63rd Street Weather Station");
+        queryParams.put("$limit", "10");
+        queryParams.put("$offset", "0"); // Starting at element 0 of array
+        queryParams.put("$order", "measurement_id");
+
+        HashMap<String, Object> queryParamsPageTwo = new HashMap<>();
+        queryParamsPageTwo.put("station_name", "63rd Street Weather Station");
+        queryParamsPageTwo.put("$limit", "10");
+        queryParamsPageTwo.put("$offset", "10"); // Starting at element 11 of array
+        queryParamsPageTwo.put("$order", "measurement_id");
+
         // ACT
+        Response resultPageOne = ApiHelper.get(apiUri, queryParams, "");
+        Response resultPageTwo = ApiHelper.get(apiUri, queryParamsPageTwo, "");
+
+        System.out.println(resultPageOne.getBody().prettyPrint());
+        System.out.println(resultPageTwo.getBody().prettyPrint());
+
         // ASSERT
+        // I need to make two requests, one for each page.
+        // Then, compare lists to verify that any element of the second page is in first page.
+        List<String> measurementsPageOne = resultPageOne.then()
+                                                            .extract()
+                                                            .body()
+                                                            .jsonPath()
+                                                            .getList("measurement_id", String.class);
+
+        List<String> measurementsPageTwo = resultPageTwo.then()
+                                                            .extract()
+                                                            .body()
+                                                            .jsonPath()
+                                                            .getList("measurement_id", String.class);
+
+
+        assertFalse(measurementsPageOne.stream().anyMatch(measurementsPageTwo::contains));
     }
 
     /***
