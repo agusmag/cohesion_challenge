@@ -15,7 +15,7 @@ import static org.testng.Assert.assertFalse;
 public class ChicagoWeatherTest {
     private final String apiUri = "https://data.cityofchicago.org/resource/k7hf-8y75.json";
     private final String userToken = "";
-    private final HashMap<String, Object> queryParams = new HashMap<String, Object>();
+    private final HashMap<String, Object> queryParams = new HashMap<>();
 
     @BeforeTest()
     public void beforeTest() {
@@ -102,7 +102,21 @@ public class ChicagoWeatherTest {
     @Test(priority = 30)
     public void verifyErrorMessageUsingMalformedQuery() {
         // ARRANGE
+        queryParams.put("station_name", "63rd Street Weather Station");
+        queryParams.put("$where", "battery_life < full"); // Using malformed SoQL query (compare string with number)
+
         // ACT
+        Response result = ApiHelper.get(apiUri, queryParams, "");
+
+        System.out.println(result.getBody().prettyPrint());
+
         // ASSERT
+        result.then()
+                .assertThat()
+                .body("code", equalTo("query.compiler.malformed"))
+                .and()
+                .body("error", equalTo(true))
+                .and()
+                .body("message", containsStringIgnoringCase("COULD NOT PARSE SOQL QUERY"));
     }
 }
