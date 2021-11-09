@@ -1,14 +1,19 @@
 package api;
 
+import helpers.api.ApiHelper;
+import io.restassured.response.Response;
+
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
 
+import static org.hamcrest.CoreMatchers.*;
+
 public class ChicagoWeatherTest {
-    private final String apiUri = "https://data.cityofchicago.org/id/k7hf-8y75";
+    private final String apiUri = "https://data.cityofchicago.org/resource/k7hf-8y75.json";
     private final String userToken = "";
-    private HashMap<String, Object> queryParams = new HashMap<String, Object>();
+    private final HashMap<String, Object> queryParams = new HashMap<String, Object>();
 
     @BeforeTest()
     public void beforeTest() {
@@ -24,8 +29,19 @@ public class ChicagoWeatherTest {
     @Test(priority = 1)
     public void listAllMeasurementsOnOakStreet() {
         // ARRANGE
+        queryParams.put("station_name", "Oak Street Weather Station");
+
         // ACT
+        Response result = ApiHelper.get(apiUri, queryParams, "");
+
+        System.out.println(result.getBody().prettyPrint());
+
         // ASSERT
+        result.then()
+                .assertThat()
+                .statusCode(200)
+                .and()
+                .body("station_name", everyItem(equalTo("Oak Street Weather Station")));
     }
 
     /***
