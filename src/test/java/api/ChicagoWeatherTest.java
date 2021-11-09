@@ -3,11 +3,16 @@ package api;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import java.util.HashMap;
+
 public class ChicagoWeatherTest {
+    private final String apiUri = "https://data.cityofchicago.org/id/k7hf-8y75";
+    private final String userToken = "";
+    private HashMap<String, Object> queryParams = new HashMap<String, Object>();
 
     @BeforeTest()
     public void beforeTest() {
-
+        queryParams.clear();
     }
 
     /***
@@ -18,7 +23,9 @@ public class ChicagoWeatherTest {
      */
     @Test(priority = 1)
     public void listAllMeasurementsOnOakStreet() {
-
+        // ARRANGE
+        // ACT
+        // ASSERT
     }
 
     /***
@@ -30,7 +37,9 @@ public class ChicagoWeatherTest {
      */
     @Test(priority = 20)
     public void verifyPageNavigationInDataSets() {
-
+        // ARRANGE
+        // ACT
+        // ASSERT
     }
 
     /***
@@ -41,6 +50,8 @@ public class ChicagoWeatherTest {
      */
     @Test(priority = 30)
     public void verifyErrorMessageUsingMalformedQuery() {
-
+        // ARRANGE
+        // ACT
+        // ASSERT
     }
 }
