@@ -3,6 +3,7 @@ package api;
 import helpers.api.ApiHelper;
 import io.restassured.response.Response;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
@@ -17,8 +18,8 @@ public class ChicagoWeatherTest {
     private final String userToken = "";
     private final HashMap<String, Object> queryParams = new HashMap<>();
 
-    @BeforeTest()
-    public void beforeTest() {
+    @BeforeMethod()
+    public void beforeMethod() {
         queryParams.clear();
     }
 
